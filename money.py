@@ -1,6 +1,16 @@
-class DifferentCurrencyError(Exception):
-    pass
+import pytest
 
+
+class DifferentCurrencyError(Exception):
+    # def __init__(self, other, exception):
+    #     self.exception = exception
+    #     try: self.currency = other.currency
+    #     except DifferentCurrencyError as error:
+    #         print(error)
+
+            pass
+
+  
 
 class Currency:
     """
@@ -9,19 +19,26 @@ class Currency:
 
     def __init__(self, name, code, symbol=None, digits=2):
         """
-        Parameters:
-        - name -- the English name of the currency
-        - code -- the ISO 4217 three-letter code for the currency
-        - symbol - optional symbol used to designate currency
-        - digits -- number of significant digits used
-        """
-        pass
+        Identify the parameters """
+
+        self.name = name 
+        # -- the English name of the currency
+        self.code = code 
+        # -- the ISO 4217 three-letter code for the currency
+        self.symbol = symbol 
+        # - optional symbol used to designate currency
+        self.digits = digits
+        # -- number of significant digits used
+        
 
     def __str__(self):
         """
         Should return the currency code, or code with symbol in parentheses.
         """
-        pass
+        if self.symbol == None:
+            return f"{self.code}"
+        else:
+            return f"{self.code(self.symbol)}"
 
     def __eq__(self, other):
         """
@@ -39,20 +56,29 @@ class Money:
 
     def __init__(self, amount, currency):
         """
-        Parameters:
-        - amount -- quantity of currency
-        - currency -- type of currency
+        Set the amount of the currency
         """
-        pass
-
+        self.currency = currency
+        self.amount = amount
+        # self.amount == amount 
+        # # -- quantity of currency
+        # self.currency == currency
+        # #  type of currency
+        
+        
     def __str__(self):
         """
         Should use the currency symbol if available, else use the code.
         Use the currency digits to determine number of digits to show.
         """
-        pass
+        if self.currency.symbol:
+            return f"{self.currency.symbol}{self.amount:.{self.currency.digits}f}" 
+        else:
+            return f"{self.currency.code} {self.amount:.{self.currency.digits}f}"
+
 
     def __repr__(self):
+
         return f"<Money {str(self)}>"
 
     def __eq__(self, other):
@@ -67,23 +93,32 @@ class Money:
         Add two money objects of the same currency. If they have different
         currencies, raise a DifferentCurrencyError.
         """
-        pass
+        if self.currency.code == other.currency.code:
+            return Money(self.amount + other.amount, self.currency)
+        else:
+            raise DifferentCurrencyError
+
+            
 
     def sub(self, other):
         """
         Subtract two money objects of the same currency. If they have different
         currencies, raise a DifferentCurrencyError.
         """
-        pass
+        if self.currency.code == other.currency.code:
+            return Money(self.amount - other.amount, self.currency)
+        else:
+            raise DifferentCurrencyError
 
     def mul(self, multiplier):
         """
         Multiply a money object by a number to get a new money object.
         """
-        pass
+        return Money(self.amount * multiplier, self.currency)
 
     def div(self, divisor):
         """
         Divide a money object by a number to get a new money object.
         """
-        pass
+        return Money(self.amount / divisor, self.currency)
+
